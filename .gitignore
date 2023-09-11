@@ -9,3 +9,5 @@ coverage.xml
 .env
 logs/
 .tool-versions
+.DS_Store
+reports/*.xlsx

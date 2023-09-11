@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "radio-cross"
-version = "0.1.0"
+version = "1.0.0"
 description = "Check radio cross connections between bbus"
 authors = ["Ramil Albakov <ramil.albakov2@gmail.com>"]
 readme = "README.md"
@@ -8,10 +8,17 @@ packages = [{include = "radio_cross"}]
 
 [tool.poetry.dependencies]
 python = ">=3.8.1,<4.0"
+enm-client-scripting = {path = "local_packages/enm_client_scripting-1.22.2-py2.py3-none-any.whl"}
+python-dotenv = "^1.0.0"
+openpyxl = "^3.1.2"
+anpusr-mail = {path = "local_packages/anpusr_mail-0.1.0-py3-none-any.whl"}
 
 
 [tool.poetry.group.dev.dependencies]
 wemake-python-styleguide = "^0.18.0"
+
+[tool.poetry.scripts]
+check-radio-cross = "radio_cross.scripts.check_radio_cross:main"
 
 [build-system]
 requires = ["poetry-core"]
