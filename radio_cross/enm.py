@@ -17,8 +17,8 @@ def cmedit_get(enm, command):
     Returns:
         list: the response from the ENM after executing the CLI command
     """
-    if enm == 'ENM1':
-        enm_server = os.getenv('ENM_SERVER_1')
+    if enm == 'ENM4':
+        enm_server = os.getenv('ENM_SERVER_4')
     elif enm == 'ENM2':
         enm_server = os.getenv('ENM_SERVER_2')
 
@@ -41,7 +41,7 @@ def get_radio_data():
     Returns:
         list: a list of ENM ElementGroups with radio data
     """
-    enms = ('ENM1', 'ENM2')
+    enms = ('ENM4', 'ENM2')
     command_scope_mo = 'cmedit get * FieldReplaceableUnit.'
     mo_params = '(isSharedWithExternalMe==true,productData)'
     command = command_scope_mo + mo_params

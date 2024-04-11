@@ -15,6 +15,7 @@ def parse_fdn(fdn, mo_type):
     re_patterns = {
         'MeContext': 'MeContext=[^,]*',
         'FieldReplaceableUnit': 'FieldReplaceableUnit=.*',
+        'SubNetwork': ',SubNetwork=[^,]*',
     }
 
     mo_value_index = -1
@@ -80,12 +81,13 @@ def parse_sector(field_unit):
     return sector_number
 
 
-def add_radio_data(radio_data, node_name, sector, serial_number, product_name):
+def add_radio_data(radio_data, subnetwork, node_name, sector, serial_number, product_name):
     """
     Add radio data parsed from ENM CLI output to result dict.
 
     Args:
         radio_data (dict): result of parsing
+        subnetwork (str): a subnetwork name
         node_name (str): a site name
         sector (str): a sector where radio installed
         serial_number (str): a serial number of the radio
@@ -93,7 +95,9 @@ def add_radio_data(radio_data, node_name, sector, serial_number, product_name):
     """
     if None not in {sector, serial_number, product_name}:
         key = f'{serial_number}:{product_name}'
-        radio_data.setdefault(key, {})[node_name] = sector
+        radio_data.setdefault(key, {})['subnetwork'] = subnetwork
+        if sector not in radio_data[key].values():
+            radio_data[key][node_name] = sector
 
 
 def parse_radio_data(enm_radio_data):
@@ -112,6 +116,7 @@ def parse_radio_data(enm_radio_data):
     for element in enm_radio_data:
         element_val = element.value()
         if 'FDN' in element_val:
+            subnetwork = parse_fdn(element_val, 'SubNetwork')
             node_name = parse_fdn(element_val, 'MeContext')
             field_unit = parse_fdn(element_val, 'FieldReplaceableUnit')
             sector = parse_sector(field_unit)
@@ -119,6 +124,7 @@ def parse_radio_data(enm_radio_data):
             serial_number, product_name = parse_product_data(element_val)
             add_radio_data(
                 radio_data,
+                subnetwork,
                 node_name,
                 sector,
                 serial_number,
