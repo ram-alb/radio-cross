@@ -9,9 +9,9 @@ def fill_headers(sheet):
         sheet (openpyxl sheet obj): an active sheet
     """
     headers = [
+        'Subnetwork',
         'Serial',
         'Radio',
-        'Subnetwork',
         'Site1',
         'Site1 sector',
         'Site2',
@@ -34,7 +34,7 @@ def fill_radio_params(sheet, row, radio_params):
     col = 4
     for parameter_name, parameter_value in radio_params.items():
         if parameter_name == 'subnetwork':
-            sheet.cell(row=row, column=3, value=parameter_value)
+            sheet.cell(row=row, column=1, value=parameter_value)
         else:
             sheet.cell(row=row, column=col, value=parameter_name)
             col += 1
@@ -59,11 +59,9 @@ def fill_report(radio_data):
 
     row = 2
     for radio, radio_params in radio_data.items():
-        if len(radio_params.keys()) != 3:
-            continue
         serial, radio_type = radio.split(':')
-        sheet.cell(row=row, column=1, value=serial)
-        sheet.cell(row=row, column=2, value=radio_type)
+        sheet.cell(row=row, column=2, value=serial)
+        sheet.cell(row=row, column=3, value=radio_type)
 
         fill_radio_params(sheet, row, radio_params)
 

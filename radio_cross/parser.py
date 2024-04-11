@@ -100,6 +100,46 @@ def add_radio_data(radio_data, subnetwork, node_name, sector, serial_number, pro
             radio_data[key][node_name] = sector
 
 
+def filter_radio_data(radio_data):
+    """
+    Filter radio data with crosses.
+
+    Args:
+        radio_data (dict): result of parsing
+
+    Returns:
+        dict
+    """
+    filtered_radio_data = {}
+    for radio, radio_params in radio_data.items():
+        if len(radio_params.keys()) == 3:
+            filtered_radio_data[radio] = radio_params
+    return filtered_radio_data
+
+
+def count_crosses(radio_data):
+    """
+    Count crosses by subnetworks.
+
+    Args:
+        radio_data (dict): result of parsing
+
+    Returns:
+        dict
+    """
+    stat = {}
+    radio_params = radio_data.values()
+    for radio_param in radio_params:
+        subnetwork = radio_param['subnetwork']
+        if stat.get(subnetwork):
+            stat[subnetwork] += 1
+        else:
+            stat[subnetwork] = 1
+    sorted_stat = {subnet: stat[subnet] for subnet in sorted(stat)}
+    sorted_stat['Total'] = len(radio_params)
+    return sorted_stat
+
+
 def parse_radio_data(enm_radio_data):
     """
     Parse radio data from enm data.
@@ -130,5 +170,7 @@ def parse_radio_data(enm_radio_data):
                 serial_number,
                 product_name,
             )
+    filtered_radio_data = filter_radio_data(radio_data)
+    stat = count_crosses(filtered_radio_data)
 
-    return radio_data
+    return filtered_radio_data, stat
