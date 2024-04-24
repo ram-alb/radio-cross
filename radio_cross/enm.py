@@ -34,6 +34,36 @@ def cmedit_get(enm, command):
     return response.get_output()
 
 
+def _filter_enm_data(enm_data):
+    """
+    Filter enm data where FieldReplaceableUnit is shared.
+
+    Args:
+        enm_data: a list of ENM ElementGroups with radio data
+
+    Returns:
+        a list of strings
+    """
+    filtered_data = []
+
+    fdn = ''
+    is_shared = ''
+    product_data = ''
+
+    for row in enm_data:
+        row_value = row.value()
+        if 'FDN' in row_value:
+            fdn = row_value
+        if 'isSharedWithExternalMe' in row_value:
+            is_shared = row_value
+        if 'productData' in row_value:
+            product_data = row_value
+            if 'true' in is_shared:
+                filtered_data.append(fdn)
+                filtered_data.append(product_data)
+    return filtered_data
+
+
 def get_radio_data():
     """
     Get radio data from enms.
@@ -43,8 +73,9 @@ def get_radio_data():
     """
     enms = ('ENM4', 'ENM2')
     command_scope_mo = 'cmedit get * FieldReplaceableUnit.'
-    mo_params = '(isSharedWithExternalMe==true,productData)'
+    mo_params = '(isSharedWithExternalMe,productData)'
     command = command_scope_mo + mo_params
-    return [
+    enm_data = [
         enm_item for enm in enms for enm_item in cmedit_get(enm, command)
     ]
+    return _filter_enm_data(enm_data)

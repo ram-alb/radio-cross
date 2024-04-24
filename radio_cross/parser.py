@@ -145,16 +145,14 @@ def parse_radio_data(enm_radio_data):
     Parse radio data from enm data.
 
     Args:
-        enm_radio_data (ENM ElementGroup): a tuple of elements
-            representing the output from the command
+        enm_radio_data (list): a list with enm data
 
     Returns:
         dict: keys defines the radio, vlaues - dicts with nodename and sector
     """
     radio_data = {}
 
-    for element in enm_radio_data:
-        element_val = element.value()
+    for element_val in enm_radio_data:
         if 'FDN' in element_val:
             subnetwork = parse_fdn(element_val, 'SubNetwork')
             node_name = parse_fdn(element_val, 'MeContext')
