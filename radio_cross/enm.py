@@ -42,7 +42,10 @@ def get_radio_data():
         list: a list of ENM ElementGroups with radio data
     """
     enms = ('ENM4', 'ENM2')
-    command_scope_mo = 'cmedit get * FieldReplaceableUnit.'
+    command_scope_mo = (
+        'cmedit get * --scopefilter (NetworkElement.neType==RadioNode AND '
+        'NetworkElement.ossModelIdentity!=<null>) FieldReplaceableUnit.'
+    )
     mo_params = '(isSharedWithExternalMe==true,productData)'
     command = command_scope_mo + mo_params
     return [
