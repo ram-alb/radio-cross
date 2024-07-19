@@ -100,6 +100,24 @@ def add_radio_data(radio_data, subnetwork, node_name, sector, serial_number, pro
             radio_data[key][node_name] = sector
 
 
+def is_sector_different(radio_params):
+    """
+    Check if the sectors in the provided radio parameters are different.
+
+    Args:
+        radio_params (dict): subnetwork, nodes and their sectors
+
+    Returns:
+        bool
+    """
+    nodes = [radio_key for radio_key in radio_params.keys() if radio_key != 'subnetwork']
+    sector1 = radio_params[nodes[0]]
+    sector2 = radio_params[nodes[1]]
+    sector1_number = sector1[:2]
+    sector2_number = sector2[:2]
+    return sector1_number != sector2_number
+
+
 def filter_radio_data(radio_data):
     """
     Filter radio data with crosses.
@@ -112,7 +130,7 @@ def filter_radio_data(radio_data):
     """
     filtered_radio_data = {}
     for radio, radio_params in radio_data.items():
-        if len(radio_params.keys()) == 3:
+        if len(radio_params.keys()) == 3 and is_sector_different(radio_params):
             filtered_radio_data[radio] = radio_params
     return filtered_radio_data
 
