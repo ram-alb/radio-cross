@@ -113,6 +113,10 @@ def is_sector_different(radio_params):
     nodes = [radio_key for radio_key in radio_params.keys() if radio_key != 'subnetwork']
     sector1 = radio_params[nodes[0]]
     sector2 = radio_params[nodes[1]]
+
+    if len(sector1) == len(sector2):
+        return sector1 != sector2
+
     sector1_number = sector1[:2]
     sector2_number = sector2[:2]
     return sector1_number != sector2_number
